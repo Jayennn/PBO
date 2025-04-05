@@ -457,8 +457,6 @@ public class Calculator extends javax.swing.JFrame {
     });
     buttonPanel.add(buttonEqual);
 
-    add(buttonPanel, BorderLayout.CENTER);
-
     JButton buttonMod = new JButton("mod");
     buttonMod.setFont(new Font("Arial", Font.PLAIN, 24));
     buttonMod.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -495,6 +493,7 @@ public class Calculator extends javax.swing.JFrame {
     });
     buttonPanel.add(buttonCube);
 
+    add(buttonPanel, BorderLayout.CENTER);
     setVisible(true);
 
   }
