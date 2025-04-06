@@ -34,7 +34,6 @@ public class StudentRecord extends JFrame {
     model.addColumn("Phone");
 
     try {
-      int no = 1;
       String sql = "SELECT * FROM mahasiswa";
       Connection conn = Koneksi.configDB();
       PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -47,7 +46,7 @@ public class StudentRecord extends JFrame {
         String address = rs.getString("alamat");
         String phone = rs.getString("no_telpon");
 
-        model.addRow(new Object[] { no++, name, nim, major, address, phone });
+        model.addRow(new Object[] { model.getRowCount() + 1, name, nim, major, address, phone });
       }
       rs.close();
       pstmt.close();
@@ -135,17 +134,17 @@ public class StudentRecord extends JFrame {
     buttonPanel.setPreferredSize(new Dimension(150, 200));
 
     JButton addButton = new JButton("Tambah");
-    // JButton editButton = new JButton("Edit");
-    // JButton deleteButton = new JButton("Hapus");
+    JButton editButton = new JButton("Edit");
+    JButton deleteButton = new JButton("Hapus");
     // JButton clearButton = new JButton("Clear");
 
     addButton.setFont(new Font("Arial", Font.PLAIN, 20));
-    // editButton.setFont(new Font("Arial", Font.PLAIN, 20));
-    // deleteButton.setFont(new Font("Arial", Font.PLAIN, 20));
+    editButton.setFont(new Font("Arial", Font.PLAIN, 20));
+    deleteButton.setFont(new Font("Arial", Font.PLAIN, 20));
     // clearButton.setFont(new Font("Arial", Font.PLAIN, 20));
 
     addButton.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
+      public void actionPerformed(ActionEvent evt) {
         try {
           String name = nameField.getText();
           String nim = nimField.getText();
@@ -170,8 +169,8 @@ public class StudentRecord extends JFrame {
           pstmt.close();
           conn.close();
 
-          loadTableComponent(); // Refresh the table after adding data
           JOptionPane.showMessageDialog(null, "Data added successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+          loadTableComponent(); // Refresh the table after adding data
 
           // Clear the input fields
           nameField.setText("");
@@ -185,27 +184,39 @@ public class StudentRecord extends JFrame {
       }
     });
 
-    // deleteButton.addActionListener(new ActionListener() {
-    // public void actionPerformed(ActionEvent e) {
-    // int selectedRow = table.getSelectedRow();
-    // if (selectedRow != -1) {
-    // model.removeRow(selectedRow);
-    // }
-    // }
-    // });
+    deleteButton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent evt) {
+        int selectedRow = table.getSelectedRow();
+        System.err.println(model.getValueAt(selectedRow, 2));
+        String nim = model.getValueAt(selectedRow, 2).toString();
+        try {
+          String sql = "DELETE FROM mahasiswa WHERE nim = ?";
+          Connection conn = Koneksi.configDB();
+          PreparedStatement pstmt = conn.prepareStatement(sql);
+          pstmt.setString(1, nim);
+          pstmt.executeUpdate();
+          pstmt.close();
+          conn.close();
+          model.removeRow(selectedRow); // Remove the row from the table model
+          JOptionPane.showMessageDialog(null, "Data deleted successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+          loadTableComponent(); // Refresh the table after deleting data
+        } catch (Exception e) {
+          JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+      };
+    });
 
-    // clearButton.addActionListener(new ActionListener() {
-    // public void actionPerformed(ActionEvent e) {
-    // nameField.setText("");
-    // nimField.setText("");
-    // addressField.setText("");
-    // phoneField.setText("");
-    // }
-    // });
+    editButton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent evt) {
+        int selectedRow = table.getSelectedRow();
+        System.out.println(selectedRow);
+
+      }
+    });
 
     buttonPanel.add(addButton);
-    // buttonPanel.add(editButton);
-    // buttonPanel.add(deleteButton);
+    buttonPanel.add(editButton);
+    buttonPanel.add(deleteButton);
     // buttonPanel.add(clearButton);
 
     return buttonPanel;
