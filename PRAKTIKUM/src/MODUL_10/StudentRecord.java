@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public class StudentRecord extends JFrame {
 
@@ -21,43 +22,69 @@ public class StudentRecord extends JFrame {
 
   private JTable loadTableComponent() {
     table = new JTable();
-    table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 12));
+    model = new DefaultTableModel(new Object[] { "NO", "Nama", "NIM", "Jurusan", "Alamat", "Phone" }, 0);
+    table.setModel(model);
     table.setFont(new Font("Arial", Font.PLAIN, 12));
     table.setRowHeight(30);
+    table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 12));
 
-    model = new DefaultTableModel();
-    model.addColumn("NO");
-    model.addColumn("Nama");
-    model.addColumn("NIM");
-    model.addColumn("Jurusan");
-    model.addColumn("Alamat");
-    model.addColumn("Phone");
+    setTableClickListener(); // Set listener untuk klik pada tabel
+    table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    refreshTableData(); // Load data saat pertama kali
+    return table;
+  }
 
+  private void loadSelectedRowData() {
+    int selectedRow = table.getSelectedRow();
+    if (selectedRow != -1) {
+      nameField.setText(model.getValueAt(selectedRow, 1).toString());
+      nimField.setText(model.getValueAt(selectedRow, 2).toString());
+      majorComboBox.setSelectedItem(model.getValueAt(selectedRow, 3).toString());
+      addressField.setText(model.getValueAt(selectedRow, 4).toString());
+      phoneField.setText(model.getValueAt(selectedRow, 5).toString());
+    }
+  }
+
+  private void setTableClickListener() {
+    table.addMouseListener(new java.awt.event.MouseAdapter() {
+      public void mouseClicked(java.awt.event.MouseEvent evt) {
+        loadSelectedRowData();
+      }
+    });
+  }
+
+  private void refreshTableData() {
+    model.setRowCount(0);
     try {
       String sql = "SELECT * FROM mahasiswa";
       Connection conn = Koneksi.configDB();
       PreparedStatement pstmt = conn.prepareStatement(sql);
-      java.sql.ResultSet rs = pstmt.executeQuery();
+      ResultSet rs = pstmt.executeQuery();
 
       while (rs.next()) {
-        String name = rs.getString("nama");
-        String nim = rs.getString("nim");
-        String major = rs.getString("jurusan");
-        String address = rs.getString("alamat");
-        String phone = rs.getString("no_telpon");
-
-        model.addRow(new Object[] { model.getRowCount() + 1, name, nim, major, address, phone });
+        model.addRow(new Object[] {
+            model.getRowCount() + 1,
+            rs.getString("nama"),
+            rs.getString("nim"),
+            rs.getString("jurusan"),
+            rs.getString("alamat"),
+            rs.getString("no_telpon")
+        });
       }
       rs.close();
       pstmt.close();
       conn.close();
-
     } catch (Exception e) {
       JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
+  }
 
-    table.setModel(model);
-    return table;
+  private void clearFields() {
+    nameField.setText("");
+    nimField.setText("");
+    addressField.setText("");
+    phoneField.setText("");
+    majorComboBox.setSelectedIndex(0);
   }
 
   private JPanel studentFormComponent() {
@@ -145,18 +172,19 @@ public class StudentRecord extends JFrame {
 
     addButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent evt) {
+
+        String name = nameField.getText();
+        String nim = nimField.getText();
+        String major = (String) majorComboBox.getSelectedItem();
+        String address = addressField.getText();
+        String phone = phoneField.getText();
+
+        if (name.isEmpty() || nim.isEmpty() || address.isEmpty() || phone.isEmpty()) {
+          JOptionPane.showMessageDialog(null, "Please fill in all fields", "Error", JOptionPane.ERROR_MESSAGE);
+          return;
+        }
+
         try {
-          String name = nameField.getText();
-          String nim = nimField.getText();
-          String major = (String) majorComboBox.getSelectedItem();
-          String address = addressField.getText();
-          String phone = phoneField.getText();
-
-          if (name.isEmpty() || nim.isEmpty() || address.isEmpty() || phone.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please fill in all fields", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-          }
-
           String sql = "INSERT INTO mahasiswa (nama, nim, jurusan, alamat, no_telpon) VALUES (?, ?, ?, ?, ?)";
           Connection conn = Koneksi.configDB();
           PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -169,15 +197,41 @@ public class StudentRecord extends JFrame {
           pstmt.close();
           conn.close();
 
-          JOptionPane.showMessageDialog(null, "Data added successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
-          loadTableComponent(); // Refresh the table after adding data
+          refreshTableData();
+          clearFields();
+          JOptionPane.showMessageDialog(null, "Data berhasil ditambahkan!");
+        } catch (Exception ex) {
+          JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+      }
+    });
 
-          // Clear the input fields
-          nameField.setText("");
-          nimField.setText("");
-          addressField.setText("");
-          phoneField.setText("");
+    editButton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent evt) {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow == -1) {
+          JOptionPane.showMessageDialog(null, "Pilih data yang ingin diedit", "Peringatan",
+              JOptionPane.WARNING_MESSAGE);
+          return;
+        }
+        String nim = model.getValueAt(selectedRow, 2).toString();
 
+        try {
+          String sql = "UPDATE mahasiswa SET nama=?, jurusan=?, alamat=?, no_telpon=? WHERE nim=?";
+          Connection conn = Koneksi.configDB();
+          PreparedStatement pstmt = conn.prepareStatement(sql);
+          pstmt.setString(1, nameField.getText());
+          pstmt.setString(2, (String) majorComboBox.getSelectedItem());
+          pstmt.setString(3, addressField.getText());
+          pstmt.setString(4, phoneField.getText());
+          pstmt.setString(5, nim);
+          pstmt.executeUpdate();
+          pstmt.close();
+          conn.close();
+
+          refreshTableData();
+          clearFields();
+          JOptionPane.showMessageDialog(null, "Data berhasil diupdate!");
         } catch (Exception ex) {
           JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -187,31 +241,29 @@ public class StudentRecord extends JFrame {
     deleteButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent evt) {
         int selectedRow = table.getSelectedRow();
-        System.err.println(model.getValueAt(selectedRow, 2));
+        if (selectedRow == -1) {
+          JOptionPane.showMessageDialog(null, "Pilih data yang ingin dihapus", "Peringatan",
+              JOptionPane.WARNING_MESSAGE);
+          return;
+        }
+
         String nim = model.getValueAt(selectedRow, 2).toString();
         try {
-          String sql = "DELETE FROM mahasiswa WHERE nim = ?";
+          String sql = "DELETE FROM mahasiswa WHERE nim=?";
           Connection conn = Koneksi.configDB();
           PreparedStatement pstmt = conn.prepareStatement(sql);
           pstmt.setString(1, nim);
           pstmt.executeUpdate();
           pstmt.close();
           conn.close();
-          model.removeRow(selectedRow); // Remove the row from the table model
-          JOptionPane.showMessageDialog(null, "Data deleted successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
-          loadTableComponent(); // Refresh the table after deleting data
-        } catch (Exception e) {
-          JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
+          refreshTableData();
+          clearFields();
+          JOptionPane.showMessageDialog(null, "Data berhasil dihapus!");
+        } catch (Exception ex) {
+          JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
       };
-    });
-
-    editButton.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent evt) {
-        int selectedRow = table.getSelectedRow();
-        System.out.println(selectedRow);
-
-      }
     });
 
     buttonPanel.add(addButton);
