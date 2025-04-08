@@ -8,7 +8,9 @@ public class WhileLoopExamples {
     int current = 1;
     while (current <= max) {
       if (current % 2 == 0) {
-        System.out.print(current + " ");
+        System.out.println(current + " Genap");
+      } else {
+        System.out.println(current + " Ganjil");
       }
       current++;
     }

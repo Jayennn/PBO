@@ -1,4 +1,4 @@
-package MODUL_7.SOAL_2;
+package MODUL_6.SOAL_2;
 
 public class Biodata {
   private String name;
@@ -13,7 +13,8 @@ public class Biodata {
   private String skills;
   private String achievements;
 
-  public Biodata(String name, String studentId, String major, String faculty, String university, String address, String email, String work, String hobbies, String skills, String achievements) {
+  public Biodata(String name, String studentId, String major, String faculty, String university, String address,
+      String email, String work, String hobbies, String skills, String achievements) {
     this.name = name;
     this.studentId = studentId;
     this.major = major;
@@ -30,7 +31,7 @@ public class Biodata {
   public String getName() {
     return this.name;
   }
-  
+
   public String setName(String name) {
     return this.name = name;
   }
@@ -83,7 +84,7 @@ public class Biodata {
     return this.work;
   }
 
-  public String setWork(String work){
+  public String setWork(String work) {
     return this.work = work;
   }
 
@@ -110,5 +111,5 @@ public class Biodata {
   public String setAchivements(String achievements) {
     return this.achievements = achievements;
   }
-  
+
 }

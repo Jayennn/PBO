@@ -26,7 +26,7 @@
 
 ---
 
-### Pembahasan
+## Pembahasan
 
 #### `Main.java`
 

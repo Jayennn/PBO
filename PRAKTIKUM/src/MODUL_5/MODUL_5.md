@@ -1,5 +1,48 @@
-package MODUL_5;
+# Pemrograman Berorientasi Objek
 
+## Praktikum Modul 4
+
+**Disusun oleh:**  
+**Nama:** Gian Alharitz Ueldy Secondri  
+**NIM:** 11241033
+
+---
+
+### Tugas dan Deskripsi Singkat
+
+1. Buatlah program Java sederhana yang dapat menghitung perkalian dan pengurangan
+   antara matriks X dan Y yang memiliki ordo 2x2. Gunakan switch-case dalam pemilihan
+   perkalian dan pengurangan matriks.
+
+---
+
+## Pembahasan
+
+#### `Main.java`
+
+```java
+public class Main {
+  public static void main(String[] args) {
+    StudentRecord student1 = new StudentRecord();
+    System.out.println("=====================");
+
+    student1.display();
+    System.out.println("=====================");
+
+    student1.display(3.5, 3.6, "KNB Scholarship");
+
+    System.out.println("=====================");
+    student1.displayAll();
+
+    System.out.println("=====================");
+
+  }
+}
+```
+
+#### `StudentRecord.java`
+
+```java
 public class StudentRecord {
   private String name;
   private String studentId;
@@ -59,3 +102,4 @@ public class StudentRecord {
   }
 
 }
+```

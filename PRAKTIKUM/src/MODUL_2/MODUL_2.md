@@ -24,7 +24,7 @@
 
 ---
 
-### Pembahasan
+## Pembahasan
 
 #### `Main.java`
 
@@ -157,11 +157,11 @@ public class TriangularPrism {
   private double triangleHeight;
   private double prismHeight;
 
-  // Konstruktor: menerima tiga nilai saat objek dibuat
+  // Constructor: digunakan untuk menginisialisasi alas segitiga, tinggi segitiga, dan tinggi prisma
   public TriangularPrism(double triangleBase, double triangleHeight, double prismHeight){
-    this.triangleBase = triangleBase;       // alas segitiga
-    this.triangleHeight = triangleHeight;   // tinggi segitiga
-    this.prismHeight = prismHeight;         // tinggi prisma (jarak antar alas segitiga)
+    this.triangleBase = triangleBase;
+    this.triangleHeight = triangleHeight;
+    this.prismHeight = prismHeight;
   }
 
   // Method untuk menghitung luas salah satu segitiga alas
@@ -171,11 +171,9 @@ public class TriangularPrism {
   }
 
   // Method untuk menghitung luas permukaan prisma segitiga
-  // Rumus: 2 × luas alas + luas ketiga sisi tegak (diasumsikan alas segitiga sama panjang semua sisi tegaknya)
+  // Rumus: 2 × luas alas + luas ketiga sisi tegak
   public double calculateSurfaceArea(){
     double triangleArea = calculateTriangleArea();
-
-    // Asumsi: semua sisi tegaknya berupa persegi panjang dengan lebar = alas segitiga
     return 2 * triangleArea + (3 * triangleBase * prismHeight);
   }
 
