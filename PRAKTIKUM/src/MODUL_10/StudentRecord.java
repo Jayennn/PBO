@@ -13,7 +13,8 @@ public class StudentRecord extends JFrame {
 
   private JTable table;
   private DefaultTableModel model;
-  private JTextField nameField, nimField, addressField, phoneField;
+  private JTextField nameField, nimField, addressField, phoneField, fakultasField, universitasField,
+      bidangPeminatanField;
   private JComboBox<String> majorComboBox;
 
   public StudentRecord() {
@@ -22,7 +23,17 @@ public class StudentRecord extends JFrame {
 
   private JTable loadTableComponent() {
     table = new JTable();
-    model = new DefaultTableModel(new Object[] { "NO", "Nama", "NIM", "Jurusan", "Alamat", "Phone" }, 0);
+    model = new DefaultTableModel(new Object[] {
+        "NO",
+        "Nama",
+        "NIM",
+        "Jurusan",
+        "Alamat",
+        "Phone",
+        "Fakultas",
+        "Universitas",
+        "Bidang Peminatan"
+    }, 0);
     table.setModel(model);
     table.setFont(new Font("Arial", Font.PLAIN, 12));
     table.setRowHeight(30);
@@ -42,6 +53,9 @@ public class StudentRecord extends JFrame {
       majorComboBox.setSelectedItem(model.getValueAt(selectedRow, 3).toString());
       addressField.setText(model.getValueAt(selectedRow, 4).toString());
       phoneField.setText(model.getValueAt(selectedRow, 5).toString());
+      fakultasField.setText(model.getValueAt(selectedRow, 6).toString());
+      universitasField.setText(model.getValueAt(selectedRow, 7).toString());
+      bidangPeminatanField.setText(model.getValueAt(selectedRow, 8).toString());
     }
   }
 
@@ -68,7 +82,10 @@ public class StudentRecord extends JFrame {
             rs.getString("nim"),
             rs.getString("jurusan"),
             rs.getString("alamat"),
-            rs.getString("no_telpon")
+            rs.getString("no_telpon"),
+            rs.getString("fakultas"),
+            rs.getString("universitas"),
+            rs.getString("bidang_peminatan")
         });
       }
       rs.close();
@@ -85,10 +102,13 @@ public class StudentRecord extends JFrame {
     addressField.setText("");
     phoneField.setText("");
     majorComboBox.setSelectedIndex(0);
+    fakultasField.setText("");
+    universitasField.setText("");
+    bidangPeminatanField.setText("");
   }
 
   private JPanel studentFormComponent() {
-    JPanel formPanel = new JPanel(new GridLayout(6, 2, 10, 10)); // spacing antar komponen
+    JPanel formPanel = new JPanel(new GridLayout(9, 2, 10, 10)); // spacing antar komponen
     formPanel.setPreferredSize(new Dimension(600, 200));
 
     /* NAME */
@@ -137,6 +157,33 @@ public class StudentRecord extends JFrame {
     phoneField.setFont(new Font("Arial", Font.PLAIN, 12));
     phoneField.setPreferredSize(new Dimension(300, 40)); // lebar 300px, tinggi 40px
 
+    /* Fakultas */
+    JLabel fakultasLabel = new JLabel("Fakultas:");
+    fakultasLabel.setFont(new Font("Arial", Font.BOLD, 12));
+
+    /* FakultasField */
+    fakultasField = new JTextField();
+    fakultasField.setFont(new Font("Arial", Font.PLAIN, 12));
+    fakultasField.setPreferredSize(new Dimension(300, 40)); // lebar 300px, tinggi 40px
+
+    /* Universitas */
+    JLabel universitasLabel = new JLabel("Universitas:");
+    universitasLabel.setFont(new Font("Arial", Font.BOLD, 12));
+
+    /* UniversitasField */
+    universitasField = new JTextField();
+    universitasField.setFont(new Font("Arial", Font.PLAIN, 12));
+    universitasField.setPreferredSize(new Dimension(300, 40)); // lebar 300px, tinggi 40px
+
+    /* Bidang Peminatan */
+    JLabel bidangPeminatanLabel = new JLabel("Bidang Peminatan:");
+    bidangPeminatanLabel.setFont(new Font("Arial", Font.BOLD, 12));
+
+    /* Bidang PeminatanField */
+    bidangPeminatanField = new JTextField();
+    bidangPeminatanField.setFont(new Font("Arial", Font.PLAIN, 12));
+    bidangPeminatanField.setPreferredSize(new Dimension(300, 40)); // lebar 300px, tinggi 40px
+
     formPanel.add(nameLabel);
     formPanel.add(nameField);
     formPanel.add(nimLabel);
@@ -147,6 +194,12 @@ public class StudentRecord extends JFrame {
     formPanel.add(addressField);
     formPanel.add(phoneLabel);
     formPanel.add(phoneField);
+    formPanel.add(fakultasLabel);
+    formPanel.add(fakultasField);
+    formPanel.add(universitasLabel);
+    formPanel.add(universitasField);
+    formPanel.add(bidangPeminatanLabel);
+    formPanel.add(bidangPeminatanField);
 
     // Tambah panel luar untuk padding
     JPanel wrapperPanel = new JPanel(new BorderLayout());
@@ -178,14 +231,23 @@ public class StudentRecord extends JFrame {
         String major = (String) majorComboBox.getSelectedItem();
         String address = addressField.getText();
         String phone = phoneField.getText();
+        String fakultas = fakultasField.getText();
+        String universitas = universitasField.getText();
+        String bidangPeminatan = bidangPeminatanField.getText();
 
-        if (name.isEmpty() || nim.isEmpty() || address.isEmpty() || phone.isEmpty()) {
+        if (name.isEmpty() ||
+            nim.isEmpty() ||
+            address.isEmpty() ||
+            phone.isEmpty() ||
+            fakultas.isEmpty() ||
+            universitas.isEmpty() ||
+            bidangPeminatan.isEmpty()) {
           JOptionPane.showMessageDialog(null, "Please fill in all fields", "Error", JOptionPane.ERROR_MESSAGE);
           return;
         }
 
         try {
-          String sql = "INSERT INTO mahasiswa (nama, nim, jurusan, alamat, no_telpon) VALUES (?, ?, ?, ?, ?)";
+          String sql = "INSERT INTO mahasiswa (nama, nim, jurusan, alamat, no_telpon, fakultas, universitas, bidang_peminatan) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
           Connection conn = Koneksi.configDB();
           PreparedStatement pstmt = conn.prepareStatement(sql);
           pstmt.setString(1, name);
@@ -193,6 +255,10 @@ public class StudentRecord extends JFrame {
           pstmt.setString(3, major);
           pstmt.setString(4, address);
           pstmt.setString(5, phone);
+          pstmt.setString(6, fakultas);
+          pstmt.setString(7, universitas);
+          pstmt.setString(8, bidangPeminatan);
+
           pstmt.executeUpdate();
           pstmt.close();
           conn.close();
@@ -217,14 +283,17 @@ public class StudentRecord extends JFrame {
         String nim = model.getValueAt(selectedRow, 2).toString();
 
         try {
-          String sql = "UPDATE mahasiswa SET nama=?, jurusan=?, alamat=?, no_telpon=? WHERE nim=?";
+          String sql = "UPDATE mahasiswa SET nama=?, jurusan=?, alamat=?, no_telpon=?, fakultas=?, universitas=?, bidang_peminatan=? WHERE nim=?";
           Connection conn = Koneksi.configDB();
           PreparedStatement pstmt = conn.prepareStatement(sql);
           pstmt.setString(1, nameField.getText());
           pstmt.setString(2, (String) majorComboBox.getSelectedItem());
           pstmt.setString(3, addressField.getText());
           pstmt.setString(4, phoneField.getText());
-          pstmt.setString(5, nim);
+          pstmt.setString(5, fakultasField.getText());
+          pstmt.setString(6, universitasField.getText());
+          pstmt.setString(7, bidangPeminatanField.getText());
+          pstmt.setString(8, nim);
           pstmt.executeUpdate();
           pstmt.close();
           conn.close();
