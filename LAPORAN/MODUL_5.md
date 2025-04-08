@@ -1,6 +1,6 @@
 # Pemrograman Berorientasi Objek
 
-## Praktikum Modul 4
+## Praktikum Modul 5
 
 **Disusun oleh:**  
 **Nama:** Gian Alharitz Ueldy Secondri  

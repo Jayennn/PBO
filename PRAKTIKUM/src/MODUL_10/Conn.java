@@ -4,11 +4,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class Koneksi {
+public class Conn {
 
   private static Connection mysqlconfig;
 
-  public static Connection configDB() throws SQLException {
+  public static Connection db() throws SQLException {
     try {
       // Load MySQL JDBC Driver
       Class.forName("com.mysql.cj.jdbc.Driver");

@@ -71,7 +71,7 @@ public class StudentRecord extends JFrame {
     model.setRowCount(0);
     try {
       String sql = "SELECT * FROM mahasiswa";
-      Connection conn = Koneksi.configDB();
+      Connection conn = Conn.db();
       PreparedStatement pstmt = conn.prepareStatement(sql);
       ResultSet rs = pstmt.executeQuery();
 
@@ -248,7 +248,7 @@ public class StudentRecord extends JFrame {
 
         try {
           String sql = "INSERT INTO mahasiswa (nama, nim, jurusan, alamat, no_telpon, fakultas, universitas, bidang_peminatan) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-          Connection conn = Koneksi.configDB();
+          Connection conn = Conn.db();
           PreparedStatement pstmt = conn.prepareStatement(sql);
           pstmt.setString(1, name);
           pstmt.setString(2, nim);
@@ -284,7 +284,7 @@ public class StudentRecord extends JFrame {
 
         try {
           String sql = "UPDATE mahasiswa SET nama=?, jurusan=?, alamat=?, no_telpon=?, fakultas=?, universitas=?, bidang_peminatan=? WHERE nim=?";
-          Connection conn = Koneksi.configDB();
+          Connection conn = Conn.db();
           PreparedStatement pstmt = conn.prepareStatement(sql);
           pstmt.setString(1, nameField.getText());
           pstmt.setString(2, (String) majorComboBox.getSelectedItem());
@@ -319,7 +319,7 @@ public class StudentRecord extends JFrame {
         String nim = model.getValueAt(selectedRow, 2).toString();
         try {
           String sql = "DELETE FROM mahasiswa WHERE nim=?";
-          Connection conn = Koneksi.configDB();
+          Connection conn = Conn.db();
           PreparedStatement pstmt = conn.prepareStatement(sql);
           pstmt.setString(1, nim);
           pstmt.executeUpdate();
