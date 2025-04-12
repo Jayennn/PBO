@@ -1,6 +1,11 @@
 package MODUL_6.SOAL_2;
 
+/*
+ * Kelas Biodata digunakan untuk menyimpan dan mengelola data pribadi seorang mahasiswa.
+ * Mengimplementasikan encapsulation dengan proper access modifier dan method getter/setter standar.
+ */
 public class Biodata {
+  // Deklarasi variabel instance (atribut kelas)
   private String name;
   private String studentId;
   private String major;
@@ -13,6 +18,9 @@ public class Biodata {
   private String skills;
   private String achievements;
 
+  /*
+   * Konstruktor untuk inisialisasi objek Biodata dengan parameter lengkap.
+   */
   public Biodata(String name, String studentId, String major, String faculty, String university, String address,
       String email, String work, String hobbies, String skills, String achievements) {
     this.name = name;
@@ -28,88 +36,102 @@ public class Biodata {
     this.achievements = achievements;
   }
 
+  // Name
   public String getName() {
-    return this.name;
+    return name;
   }
 
-  public String setName(String name) {
-    return this.name = name;
+  public void setName(String name) {
+    this.name = name;
   }
 
+  // Student ID
   public String getStudentId() {
-    return this.studentId;
+    return studentId;
   }
 
-  public String setStudentId(String studentId) {
-    return this.studentId = studentId;
+  public void setStudentId(String studentId) {
+    this.studentId = studentId;
   }
 
+  // Major
   public String getMajor() {
-    return this.major;
+    return major;
   }
 
+  public void setMajor(String major) {
+    this.major = major;
+  }
+
+  // Faculty
   public String getFaculty() {
-    return this.faculty;
+    return faculty;
   }
 
-  public String setFaculty(String faculty) {
-    return this.faculty = faculty;
+  public void setFaculty(String faculty) {
+    this.faculty = faculty;
   }
 
+  // University
   public String getUniversity() {
-    return this.university;
+    return university;
   }
 
-  public String setUniversity(String university) {
-    return this.university = university;
+  public void setUniversity(String university) {
+    this.university = university;
   }
 
+  // Address
   public String getAddress() {
-    return this.address;
+    return address;
   }
 
-  public String setAddress(String address) {
-    return this.address = address;
+  public void setAddress(String address) {
+    this.address = address;
   }
 
+  // Email
   public String getEmail() {
-    return this.email;
+    return email;
   }
 
-  public String setEmail(String email) {
-    return this.email = email;
+  public void setEmail(String email) {
+    this.email = email;
   }
 
+  // Work
   public String getWork() {
-    return this.work;
+    return work;
   }
 
-  public String setWork(String work) {
-    return this.work = work;
+  public void setWork(String work) {
+    this.work = work;
   }
 
+  // Hobbies
   public String getHobbies() {
-    return this.hobbies;
+    return hobbies;
   }
 
-  public String setHobbies(String hobbies) {
-    return this.hobbies = hobbies;
+  public void setHobbies(String hobbies) {
+    this.hobbies = hobbies;
   }
 
+  // Skills
   public String getSkills() {
-    return this.skills;
+    return skills;
   }
 
-  public String setSkills(String skills) {
-    return this.skills = skills;
+  public void setSkills(String skills) {
+    this.skills = skills;
   }
 
+  // Achievements
   public String getAchievements() {
-    return this.achievements;
+    return achievements;
   }
 
-  public String setAchivements(String achievements) {
-    return this.achievements = achievements;
+  public void setAchievements(String achievements) {
+    this.achievements = achievements;
   }
-
 }
